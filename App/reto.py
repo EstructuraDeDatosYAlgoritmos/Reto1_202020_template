@@ -107,7 +107,7 @@ def conocer_a_un_director(lstmoviescasting:list, lstmoviesdetails:list, d_name:s
 
 
 
-    def genre(lst, genero):
+def genre(lst, genero):
     lista_genero = []
     lista_votos = []
     t1_start = process_time()
