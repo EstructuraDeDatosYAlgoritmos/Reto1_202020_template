@@ -85,24 +85,25 @@ def loadMoviesCasting ():
     print("Datos cargados, " + str(lt.size(lstmoviescasting)) + " elementos cargados")
     return lstmoviescasting
 
-def conocer_a_un_director(lstmoviescasting:list, lstmoviesdetails:list, d_name:str)->tuple:
+def conocer_director(lst1,lst2,name):
     pelis=[]
     num=0
     vote=0
-    i=0
-    while i < len(lstmoviescasting):
-        if lstmoviescasting[i]["director_name"]==d_name:
+    t1_start = process_time()
+    for a in lst1["elements"]:
+        i=0
+        if name.lower()== a["director_name"].lower():
            num+=1
-           prom+=lstmoviesdetails[i]["vote_average"]
-           pelis.append(lstmoviesdetails[i]["title"])
+           i=a
+           vote+=lst2["elements"][i]["vote_average"]
+           pelis.append(lst2["elements"][i]["title"])
         i+=1
     prom=(vote/num)
+    t1_stop = process_time()
+    tiempo_total = t1_stop - t1_start
+    print('El tiempo de ejecucion fue de', tiempo_total, 'segundos.')
     return (pelis, num, prom)
-
-def ejecutar_conocer_a_un_director(lstmoviescasting:list, lstmoviesdetails:list)->None:
-    d_name = input("Ingrese el nombre del director que quiere conocer: ")
-    x=conocer_a_un_director(lstcasting,lstdetails,d_name)
-    print(x)          
+          
 
 
 
@@ -153,8 +154,9 @@ def main():
                 pass
 
             elif int(inputs[0])==3: #opcion 3
-                ejecutar_conocer_a_un_director(lstmoviecasting,lstmoviesdetails)
-
+                name= input("Ingrese el director que quisiera conocer: ")
+                x=conocer_director(lstmoviescasting,lstmoviesdetails,name)
+                print(x)
             elif int(inputs[0])==4: #opcion 4
                 pass
 
