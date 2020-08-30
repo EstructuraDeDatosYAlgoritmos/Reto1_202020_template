@@ -83,6 +83,26 @@ def loadMovies ():
     return lst
 
 
+
+    def genre(lst, genero):
+    lista_genero = []
+    lista_votos = []
+    t1_start = process_time()
+    for pel in lst['elements']:
+        if genero.lower() in pel['genres'].lower()
+            lista_genero.append(pel['original_title'])
+            lista_votos.append(int(pel['vote_count']))
+    votos_totales = 0
+    for votos in lista_votos:
+        votos_totales+=votos
+    
+    promedio = votos_totales/(len(lista_votos))
+    lista_todo = [lista_genero,len(lista_genero), promedio]
+    t1_stop = process_time
+    print('El tiempo de ejecucion fue de', t1_stop-t1_start, 'segundos')
+    return lista_todo
+
+
 def main():
     """
     Método principal del programa, se encarga de manejar todos los metodos adicionales creados
@@ -122,3 +142,8 @@ def main():
                 
 if __name__ == "__main__":
     main()
+
+
+
+
+    
