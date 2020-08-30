@@ -76,13 +76,13 @@ def loadCSVFile (file, cmpfunction):
     return lst
 
 def loadMoviesDetails ():
-    lst = loadCSVFile("theMoviesdb/SmallMoviesDetailsCleaned.csv",compareRecordIds) 
-    print("Datos cargados, " + str(lt.size(lst)) + " elementos cargados")
+    lstmoviesdetails = loadCSVFile("theMoviesdb/SmallMoviesDetailsCleaned.csv",compareRecordIds) 
+    print("Datos cargados, " + str(lt.size(lstmoviesdetails)) + " elementos cargados")
     return lstmoviesdetails
 
 def loadMoviesCasting ():
-    lst = loadCSVFile("theMoviesdb/Casting.csv",compareRecordIds) 
-    print("Datos cargados, " + str(lt.size(lst)) + " elementos cargados")
+    lstmoviescasting = loadCSVFile("theMoviesdb/Casting.csv",compareRecordIds) 
+    print("Datos cargados, " + str(lt.size(lstmoviescasting)) + " elementos cargados")
     return lstmoviescasting
 
 def conocer_a_un_director(lstmoviescasting:list, lstmoviesdetails:list, d_name:str)->tuple:
@@ -112,7 +112,7 @@ def genre(lst, genero):
     lista_votos = []
     t1_start = process_time()
     for pel in lst['elements']:
-        if genero.lower() in pel['genres'].lower()
+        if genero.lower() in pel['genres'].lower():
             lista_genero.append(pel['original_title'])
             lista_votos.append(int(pel['vote_count']))
     votos_totales = 0
@@ -153,16 +153,15 @@ def main():
             elif int(inputs[0])==4: #opcion 4
                 pass
 
-            elif int(inputs[0])==3: #opcion 5
+            elif int(inputs[0])==5: #opcion 5
                 if lstmoviesdetails == None or lstmoviesdetails['size']==0:
                     print('Lista vacia')
                 else:
                     genero = input('Ingrese el genero que desea conocer:')
                     lista_todo = genre(lstmoviesdetails, genero)
                     print('Las peliculas que pertencen al genero', genero, 'son', lista_todo[0], ',en total son', lista_todo[1], 'y el promedio de votos es', lista_todo[2])
-                
-
-            elif int(inputs[0])==4: #opcion 6
+        
+            elif int(inputs[0])==46: #opcion 6
                 pass
 
 
