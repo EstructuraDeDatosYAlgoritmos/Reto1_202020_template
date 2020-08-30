@@ -78,12 +78,31 @@ def loadCSVFile (file, cmpfunction):
 def loadMoviesDetails ():
     lst = loadCSVFile("theMoviesdb/SmallMoviesDetailsCleaned.csv",compareRecordIds) 
     print("Datos cargados, " + str(lt.size(lst)) + " elementos cargados")
-    return lst
+    return lstmoviesdetails
 
 def loadMoviesCasting ():
     lst = loadCSVFile("theMoviesdb/Casting.csv",compareRecordIds) 
     print("Datos cargados, " + str(lt.size(lst)) + " elementos cargados")
-    return lst
+    return lstmoviescasting
+
+def conocer_a_un_director(lstmoviescasting:list, lstmoviesdetails:list, d_name:str)->tuple:
+    pelis=[]
+    num=0
+    vote=0
+    i=0
+    while i < len(lstmoviescasting):
+        if lstmoviescasting[i]["director_name"]==d_name:
+           num+=1
+           prom+=lstmoviesdetails[i]["vote_average"]
+           pelis.append(lstmoviesdetails[i]["title"])
+        i+=1
+    prom=(vote/num)
+    return (pelis, num, prom)
+
+ def ejecutar_conocer_a_un_director(lstmoviescasting:list, lstmoviesdetails:list)->None:
+     d_name = input("Ingrese el nombre del director que quiere conocer: ")
+     x=conocer_a_un_director(lstcasting,lstdetails,d_name)
+     print(x)          
 
 
 
@@ -124,12 +143,12 @@ def main():
 
             if int(inputs[0])==1: #opcion 1
                 lstmoviesdetails = loadMoviesDetails()
-                lstmoviecasting = loadMoviesCasting()
+                lstmoviescasting = loadMoviesCasting()
             elif int(inputs[0])==2: #opcion 2
                 pass
 
             elif int(inputs[0])==3: #opcion 3
-                pass
+                ejecutar_conocer_a_un_director(lstmoviecasting,lstmoviesdetails)
 
             elif int(inputs[0])==4: #opcion 4
                 pass
