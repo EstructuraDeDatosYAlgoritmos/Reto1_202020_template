@@ -99,10 +99,10 @@ def conocer_a_un_director(lstmoviescasting:list, lstmoviesdetails:list, d_name:s
     prom=(vote/num)
     return (pelis, num, prom)
 
- def ejecutar_conocer_a_un_director(lstmoviescasting:list, lstmoviesdetails:list)->None:
-     d_name = input("Ingrese el nombre del director que quiere conocer: ")
-     x=conocer_a_un_director(lstcasting,lstdetails,d_name)
-     print(x)          
+def ejecutar_conocer_a_un_director(lstmoviescasting:list, lstmoviesdetails:list)->None:
+    d_name = input("Ingrese el nombre del director que quiere conocer: ")
+    x=conocer_a_un_director(lstcasting,lstdetails,d_name)
+    print(x)          
 
 
 
@@ -154,7 +154,13 @@ def main():
                 pass
 
             elif int(inputs[0])==3: #opcion 5
-                pass
+                if lstmoviesdetails == None or lstmoviesdetails['size']==0:
+                    print('Lista vacia')
+                else:
+                    genero = input('Ingrese el genero que desea conocer:')
+                    lista_todo = genre(lstmoviesdetails, genero)
+                    print('Las peliculas que pertencen al genero', genero, 'son', lista_todo[0], ',en total son', lista_todo[1], 'y el promedio de votos es', lista_todo[2])
+                
 
             elif int(inputs[0])==4: #opcion 6
                 pass
