@@ -115,14 +115,19 @@ def genre(lst, genero):
         if genero.lower() in pel['genres'].lower():
             lista_genero.append(pel['original_title'])
             lista_votos.append(int(pel['vote_count']))
-    votos_totales = 0
-    for votos in lista_votos:
-        votos_totales+=votos
-    
-    promedio = votos_totales/(len(lista_votos))
-    lista_todo = [lista_genero,len(lista_genero), promedio]
-    t1_stop = process_time
-    print('El tiempo de ejecucion fue de', t1_stop-t1_start, 'segundos')
+    lista_todo = ['Ninguna', 0, 0]
+    tiempo_total = 0
+    votos_totales = 0       
+    if (len(lista_votos))== 0: 
+        print('No se encontro el genero')
+    else:
+        for votos in lista_votos:
+            votos_totales+=votos
+        promedio = votos_totales/(len(lista_votos))
+        lista_todo = [lista_genero,len(lista_genero), promedio]
+    t1_stop = process_time()
+    tiempo_total = t1_stop - t1_start
+    print('El tiempo de ejecucion fue de', tiempo_total, 'segundos.')
     return lista_todo
 
 
