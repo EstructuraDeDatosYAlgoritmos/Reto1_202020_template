@@ -91,13 +91,10 @@ def conocer_director(lst1,lst2,name):
     vote=0
     t1_start = process_time()
     for a in lst1["elements"]:
-        i=0
         if name.lower()== a["director_name"].lower():
            num+=1
-           i=a
-           vote+=lst2["elements"][i]["vote_average"]
-           pelis.append(lst2["elements"][i]["title"])
-        i+=1
+           vote+=lst2[a]["vote_average"]
+           pelis.append(lst2[a]["title"])
     prom=(vote/num)
     t1_stop = process_time()
     tiempo_total = t1_stop - t1_start
