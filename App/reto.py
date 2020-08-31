@@ -180,9 +180,9 @@ def genre(lst, genero):
 def orderElementsByCriteria(data,less):
     t1_start = process_time()
     sort(data, less)
-    ranking = []
+    ranking = lt.newList("ARRAY_LIST")
     for i in range(1,11):
-        ranking.append(lt.getElement(data, i))
+        lt.addLast(ranking,lt.getElement(data, i))
 
     t1_stop = process_time() #tiempo final
     print("Tiempo de ejecución ", t1_stop - t1_start, " segundos")
@@ -190,10 +190,10 @@ def orderElementsByCriteria(data,less):
 
 
 def CrearRanking(data):
-    categoria = [
+    categoria = (
         'vote_count',
         'vote_average'
-    ]
+    )
     switch = True
     while switch:
         printRankingMenu()
@@ -205,32 +205,39 @@ def CrearRanking(data):
 
     less = comp.Comparation(categoria[(criteria-1) // 2])
                 
+    t1_start = process_time()
     if criteria % 2 == 1:
         temp = orderElementsByCriteria(data,less.upVal)
     else:
         temp = orderElementsByCriteria(data, less.downVal)
 
-    ranking = []
-    for element in temp:
-        ranking.append((element["title"], element[categoria[(criteria-1) // 2]]))
+    ranking = lt.newList("ARRAY_LIST")
+    for i in range(1, lt.size(temp)):
+        element = lt.getElement(temp,i)
+        lt.addLast(ranking,(element["title"], element[categoria[(criteria-1) // 2]]))
 
     del temp
-
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución Total", t1_stop - t1_start, " segundos")
     return ranking
             
 def printRanking(ranking):
     top = 1
     print('\n')
-    for element in ranking:
+    for i in range(1, lt.size(ranking)):
+        element = lt.getElement(ranking,i)
         print(f'{top}. {element[0]} con {element[1]}')
         top += 1
 
-def getGenresList (data,genero):
+def getGenresList(data, genero):
+    t1_start = process_time()
     lista = lt.newList('ARRAY_LIST')
     for i in range(1, lt.size(data)):
         element = lt.getElement(data, i)
         if element['genres'].lower() == genero.lower():
             lt.addLast(lista, element)
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución ", t1_stop - t1_start, " segundos")
     return lista
     
 def main():
@@ -250,9 +257,12 @@ def main():
         
         if len(inputs)>0 and (data or int(inputs[0])<=1):
             if int(inputs[0])==1: #opcion 1
+                t1_start = process_time()
                 lstmoviesdetails = loadMoviesDetails()
                 lstmoviescasting = loadMoviesCasting()
                 data = True
+                t1_stop = process_time() #tiempo final
+                print("Tiempo de ejecución Total: ", t1_stop - t1_start, " segundos")
             elif int(inputs[0])==2: #opcion 2
                 ranking = CrearRanking(lstmoviesdetails)
                 printRanking(ranking)
