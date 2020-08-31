@@ -31,8 +31,8 @@ import sys
 import csv
 
 import App.comparation as comp
-import Sorting.mergesort as sort
 from ADT import list as lt
+from Sorting.shellsort import shellSort as sort
 from DataStructures import listiterator as it
 from DataStructures import liststructure as lt
 
@@ -51,7 +51,7 @@ def printMenu():
     print("6- Crear ranking")
     print("0- Salir")
 
-def printRanking() -> None:
+def printRankingMenu() -> None:
     """
     Imprime las categorias para crear un ranking
     """
@@ -179,7 +179,7 @@ def genre(lst, genero):
 
 def orderElementsByCriteria(data,less):
     t1_start = process_time()
-    sort.mergesort(data, less)
+    sort(data, less)
     ranking = []
     for i in range(1,11):
         ranking.append(lt.getElement(data, i))
@@ -187,6 +187,51 @@ def orderElementsByCriteria(data,less):
     t1_stop = process_time() #tiempo final
     print("Tiempo de ejecución ", t1_stop - t1_start, " segundos")
     return ranking
+
+
+def CrearRanking(data):
+    categoria = [
+        'vote_count',
+        'vote_average'
+    ]
+    switch = True
+    while switch:
+        printRankingMenu()
+        criteria = int(input('Seleccione una opción para continuar\n'))
+        if (criteria <= 4) and (criteria > 0):
+            switch = False
+        else:
+            print("Opcion no valida")
+
+    less = comp.Comparation(categoria[(criteria-1) // 2])
+                
+    if criteria % 2 == 1:
+        temp = orderElementsByCriteria(data,less.upVal)
+    else:
+        temp = orderElementsByCriteria(data, less.downVal)
+
+    ranking = []
+    for element in temp:
+        ranking.append((element["title"], element[categoria[(criteria-1) // 2]]))
+
+    del temp
+
+    return ranking
+            
+def printRanking(ranking):
+    top = 1
+    print('\n')
+    for element in ranking:
+        print(f'{top}. {element[0]} con {element[1]}')
+        top += 1
+
+def getGenresList (data,genero):
+    lista = lt.newList('ARRAY_LIST')
+    for i in range(1, lt.size(data)):
+        element = lt.getElement(data, i)
+        if element['genres'].lower() == genero.lower():
+            lt.addLast(lista, element)
+    return lista
     
 def main():
     """
@@ -197,44 +242,20 @@ def main():
     Return: None 
     """
     data = False
-    categoria = [
-        'vote_count',
-        'vote_average'
-    ]
+    
 
     while True:
         printMenu() #imprimir el menu de opciones en consola
         inputs =input('Seleccione una opción para continuar\n') #leer opción ingresada
         
-        if len(inputs)>0 and (data or int(inputs[0])==1):
+        if len(inputs)>0 and (data or int(inputs[0])<=1):
             if int(inputs[0])==1: #opcion 1
                 lstmoviesdetails = loadMoviesDetails()
                 lstmoviescasting = loadMoviesCasting()
                 data = True
             elif int(inputs[0])==2: #opcion 2
-                switch = True
-                while switch:
-                    printRanking()
-                    criteria = int(input('Seleccione una opción para continuar\n'))
-                    if (criteria <= 4) and (criteria > 0):
-                        switch = False
-                    else:
-                        print("Opcion no valida")
-
-                less = comp.Comparation(categoria[(criteria-1) // 2])
-                
-                if criteria % 2 == 1:
-                    ranking = orderElementsByCriteria(lstmoviesdetails,less.upVal)
-                else:
-                    ranking = orderElementsByCriteria(lstmoviesdetails,less.downVal)
-                
-                top = 1
-                print('\n')
-                for element in ranking:
-                    print(f'{top}. {element["title"]} con {element[categoria[(criteria-1) // 2]]}')
-                    top += 1
-
-                del less
+                ranking = CrearRanking(lstmoviesdetails)
+                printRanking(ranking)
                 del ranking
 
             elif int(inputs[0])==3: #opcion 3
@@ -256,7 +277,12 @@ def main():
                     print('Las peliculas que pertencen al genero', genero, 'son', lista_todo[0], ',en total son', lista_todo[1], 'y el promedio de votos es', lista_todo[2])
         
             elif int(inputs[0])==6: #opcion 6
-                pass
+                genero = input('Ingrese el genero del que desea crear el ranking: ')
+                listGenre = getGenresList(lstmoviesdetails, genero)
+                ranking = CrearRanking(listGenre)
+                printRanking(ranking)
+                del ranking
+                del listGenre
 
 
             elif int(inputs[0])==0: #opcion 0, salir
