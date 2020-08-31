@@ -48,7 +48,7 @@ def printMenu():
     print("3- Conocer un director")
     print("4- Conocer un actor")
     print("5- Entender un genero")
-    print("6- Crear ranking")
+    print("6- Crear ranking a partir de un genero")
     print("0- Salir")
 
 def printRankingMenu() -> None:
