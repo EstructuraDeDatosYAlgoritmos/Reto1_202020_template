@@ -30,13 +30,13 @@ import config as cf
 import sys
 import csv
 
+import App.comparation as comp
+import Sorting.mergesort as sort
 from ADT import list as lt
 from DataStructures import listiterator as it
 from DataStructures import liststructure as lt
 
 from time import process_time 
-
-
 
 def printMenu():
     """
@@ -44,14 +44,22 @@ def printMenu():
     """
     print("\nBienvenido")
     print("1- Cargar Datos")
-    print("2- Ranking de peliculas")
+    print("2- Crear un ranking a partir de una lista de opciones")
     print("3- Conocer un director")
     print("4- Conocer un actor")
     print("5- Entender un genero")
     print("6- Crear ranking")
     print("0- Salir")
 
-
+def printRanking() -> None:
+    """
+    Imprime las categorias para crear un ranking
+    """
+    print("\nCategorias:")
+    print("1- Mas votada")
+    print("2- Menos votada")
+    print("3- Mejor puntuación")
+    print("4- Peor puntuación")
 
 
 def compareRecordIds (recordA, recordB):
@@ -63,25 +71,29 @@ def compareRecordIds (recordA, recordB):
 
 
 def loadCSVFile (file, cmpfunction):
+    t1_start = process_time()
     lst=lt.newList("ARRAY_LIST", cmpfunction)
     dialect = csv.excel()
     dialect.delimiter=";"
     try:
-        with open(  cf.data_dir + file, encoding="utf-8") as csvfile:
+        with open(cf.data_dir + file, encoding="utf-8-sig") as csvfile:
             row = csv.DictReader(csvfile, dialect=dialect)
             for elemento in row: 
                 lt.addLast(lst,elemento)
     except:
         print("Hubo un error con la carga del archivo")
+        
+    t1_stop = process_time()  #tiempo final
+    print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
     return lst
 
 def loadMoviesDetails ():
-    lstmoviesdetails = loadCSVFile("theMoviesdb/SmallMoviesDetailsCleaned.csv",compareRecordIds) 
+    lstmoviesdetails = loadCSVFile("themoviesdb/AllMoviesDetailsCleaned.csv",compareRecordIds) 
     print("Datos cargados, " + str(lt.size(lstmoviesdetails)) + " elementos cargados")
     return lstmoviesdetails
 
 def loadMoviesCasting ():
-    lstmoviescasting = loadCSVFile("theMoviesdb/Casting.csv",compareRecordIds) 
+    lstmoviescasting = loadCSVFile("themoviesdb/AllMoviesCastingRaw.csv",compareRecordIds) 
     print("Datos cargados, " + str(lt.size(lstmoviescasting)) + " elementos cargados")
     return lstmoviescasting
 
@@ -165,7 +177,17 @@ def genre(lst, genero):
     print('El tiempo de ejecucion fue de', tiempo_total, 'segundos.')
     return lista_todo
 
+def orderElementsByCriteria(data,less):
+    t1_start = process_time()
+    sort.mergesort(data, less)
+    ranking = []
+    for i in range(1,11):
+        ranking.append(lt.getElement(data, i))
 
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución ", t1_stop - t1_start, " segundos")
+    return ranking
+    
 def main():
     """
     Método principal del programa, se encarga de manejar todos los metodos adicionales creados
@@ -174,18 +196,46 @@ def main():
     Args: None
     Return: None 
     """
-
+    data = False
+    categoria = [
+        'vote_count',
+        'vote_average'
+    ]
 
     while True:
         printMenu() #imprimir el menu de opciones en consola
         inputs =input('Seleccione una opción para continuar\n') #leer opción ingresada
-        if len(inputs)>0:
-
+        
+        if len(inputs)>0 and (data or int(inputs[0])==1):
             if int(inputs[0])==1: #opcion 1
                 lstmoviesdetails = loadMoviesDetails()
                 lstmoviescasting = loadMoviesCasting()
+                data = True
             elif int(inputs[0])==2: #opcion 2
-                pass
+                switch = True
+                while switch:
+                    printRanking()
+                    criteria = int(input('Seleccione una opción para continuar\n'))
+                    if (criteria <= 4) and (criteria > 0):
+                        switch = False
+                    else:
+                        print("Opcion no valida")
+
+                less = comp.Comparation(categoria[(criteria-1) // 2])
+                
+                if criteria % 2 == 1:
+                    ranking = orderElementsByCriteria(lstmoviesdetails,less.upVal)
+                else:
+                    ranking = orderElementsByCriteria(lstmoviesdetails,less.downVal)
+                
+                top = 1
+                print('\n')
+                for element in ranking:
+                    print(f'{top}. {element["title"]} con {element[categoria[(criteria-1) // 2]]}')
+                    top += 1
+
+                del less
+                del ranking
 
             elif int(inputs[0])==3: #opcion 3
                     name = input("Ingrese el director que quisiera conocer: ")
@@ -205,17 +255,23 @@ def main():
                     lista_todo = genre(lstmoviesdetails, genero)
                     print('Las peliculas que pertencen al genero', genero, 'son', lista_todo[0], ',en total son', lista_todo[1], 'y el promedio de votos es', lista_todo[2])
         
-            elif int(inputs[0])==46: #opcion 6
+            elif int(inputs[0])==6: #opcion 6
                 pass
 
 
             elif int(inputs[0])==0: #opcion 0, salir
                 sys.exit(0)
                 
+        else:
+            print("Porfavor, cargue datos")
+
 if __name__ == "__main__":
     main()
 
 
+
+
+    
 
 
     
