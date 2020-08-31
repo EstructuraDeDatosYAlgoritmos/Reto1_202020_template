@@ -86,21 +86,58 @@ def loadMoviesCasting ():
     return lstmoviescasting
 
 def conocer_director(lst1,lst2,name):
+    ids=[]
     pelis=[]
     num=0
     vote=0
     t1_start = process_time()
     for a in lst1["elements"]:
-        if name.lower()== a["director_name"].lower():
+        if name.lower() == a["director_name"].lower():
            num+=1
-           vote+=lst2[a]["vote_average"]
-           pelis.append(lst2[a]["title"])
+           ids.append(a["id"])
+    for b in lst2["elements"]:
+        i=0
+        while i < len(ids):
+            if b["id"]== ids[i]:
+               vote+=float(b["vote_average"])
+               pelis.append(b["title"])
+            i+=1     
     prom=(vote/num)
     t1_stop = process_time()
     tiempo_total = t1_stop - t1_start
     print('El tiempo de ejecucion fue de', tiempo_total, 'segundos.')
-    return (pelis, num, prom)
-          
+    resul=(pelis,num,prom)
+    return resul
+
+def conocer_actor(lst1,lst2,name):
+    ids=[]
+    pelis=[]
+    direct={}
+    num=0
+    vote=0
+    t1_start = process_time()
+    for a in lst1["elements"]:
+        if (name.lower() == a["actor1_name"].lower()) or (name.lower() == a["actor2_name"].lower()) or (name.lower() == a["actor3_name"].lower()) or (name.lower() == a["actor4_name"].lower()) or (name.lower() == a["actor5_name"].lower()):
+           num+=1
+           ids.append(a["id"])
+           if a["director_name"] not in direct:
+              direct[a["director_name"]]=1
+           else:
+              direct[a["director_name"]]+=1     
+    for b in lst2["elements"]:
+        i=0
+        while i < len(ids):
+            if b["id"]== ids[i]:
+               vote+=float(b["vote_average"])
+               pelis.append(b["title"])
+            i+=1     
+    maydirect= max(direct.keys())
+    prom=(vote/num)
+    t1_stop = process_time()
+    tiempo_total = t1_stop - t1_start
+    print('El tiempo de ejecucion fue de', tiempo_total, 'segundos.')
+    resul=(pelis,num,prom,maydirect)
+    return resul          
 
 
 
@@ -151,11 +188,14 @@ def main():
                 pass
 
             elif int(inputs[0])==3: #opcion 3
-                name= input("Ingrese el director que quisiera conocer: ")
-                x=conocer_director(lstmoviescasting,lstmoviesdetails,name)
-                print(x)
+                    name = input("Ingrese el director que quisiera conocer: ")
+                    resul=conocer_director(lstmoviescasting,lstmoviesdetails,name)
+                    print("Las películas que dirigió", name,"son:", resul[0]," ,en total son",resul[1],"peliculas, y el promedio de calificación es de",round(resul[2],2))
+                            
             elif int(inputs[0])==4: #opcion 4
-                pass
+                    name = input("Ingrese el actor que quisiera conocer: ")
+                    resul=conocer_actor(lstmoviescasting,lstmoviesdetails,name)
+                    print("Las películas en las que estuvo", name,"son:", resul[0]," ,en total son",resul[1],"peliculas, el promedio de calificación es de",round(resul[2],2),"y el director con el que tiene más colaboraciones es",resul[3])
 
             elif int(inputs[0])==5: #opcion 5
                 if lstmoviesdetails == None or lstmoviesdetails['size']==0:
