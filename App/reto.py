@@ -180,9 +180,9 @@ def genre(lst, genero):
 def orderElementsByCriteria(data,less):
     t1_start = process_time()
     sort(data, less)
-    ranking = lt.newList("ARRAY_LIST")
+    ranking = lt.newList("SINGLE_LINKED")
     for i in range(1,11):
-        lt.addLast(ranking,lt.getElement(data, i))
+        lt.addFirst(ranking,lt.getElement(data, i))
 
     t1_stop = process_time() #tiempo final
     print("Tiempo de ejecución ", t1_stop - t1_start, " segundos")
