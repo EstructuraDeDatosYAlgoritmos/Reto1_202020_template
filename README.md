@@ -10,7 +10,7 @@ Este repositorio contiene una plantilla del proyecto del reto con el ejemplo de 
 *	Sorting: archivos Python que implementan los algoritmos de ordenamiento.
 *	Test: pruebas unitarias en Python para validar el código desarrollado.
 
-## Datos de los participantes
+## Datos de los estudiantes
 
 *   Luis Felipe Plazas Pabón  
     l.plazasp@uniandes.edu.co  
